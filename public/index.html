@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2e-documan | Deep Agent V5 Full</title>
+    <title>2e-documan | Deep Agent V6 Full</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .sidebar-item:hover { background: rgba(59, 130, 246, 0.2); border-left: 4px solid #3b82f6; }
+        .sidebar-item { cursor: pointer; transition: all 0.3s; border-left: 4px solid transparent; }
+        .sidebar-item:hover, .sidebar-item.active { background: rgba(59, 130, 246, 0.2); border-left: 4px solid #3b82f6; color: white; }
         .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .chat-bubble { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
@@ -22,73 +23,81 @@
         <div class="p-6 text-2xl font-bold text-blue-500 italic flex items-center">
             <i class="fas fa-robot mr-2"></i> 2e-documan
         </div>
-        <nav class="flex-1 px-4 space-y-2">
-            <a href="#" onclick="showTab('analiz')" class="sidebar-item flex items-center p-3 rounded transition text-gray-300 hover:text-white active">
-                <i class="fas fa-file-pdf mr-3"></i> İşlem Merkezi
-            </a>
-            <a href="#" onclick="showTab('sohbet')" class="sidebar-item flex items-center p-3 rounded transition text-gray-300 hover:text-white">
-                <i class="fas fa-comments mr-3"></i> Dökümanla Sohbet
-            </a>
-            <a href="#" onclick="showTab('admin')" class="sidebar-item flex items-center p-3 rounded transition text-gray-300 hover:text-white">
-                <i class="fas fa-cog mr-3"></i> Yönetim Paneli
-            </a>
+        <nav class="flex-1 px-4 space-y-2 mt-4">
+            <div onclick="showTab('analiz')" id="btn-analiz" class="sidebar-item active flex items-center p-4 rounded text-gray-300">
+                <i class="fas fa-file-pdf w-6"></i> <span>İşlem Merkezi</span>
+            </div>
+            <div onclick="showTab('sohbet')" id="btn-sohbet" class="sidebar-item flex items-center p-4 rounded text-gray-300">
+                <i class="fas fa-comments w-6"></i> <span>Döküman Sohbet</span>
+            </div>
+            <div onclick="showTab('admin')" id="btn-admin" class="sidebar-item flex items-center p-4 rounded text-gray-300">
+                <i class="fas fa-cog w-6"></i> <span>Sistem Ayarları</span>
+            </div>
         </nav>
-        <div class="p-4 glass text-[10px] text-gray-500 text-center">Deep Agent v5.0 | Otonom Mod Aktif</div>
+        <div class="p-4 glass text-[10px] text-gray-500 text-center uppercase tracking-widest">Deep Agent v6.0</div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto p-8 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
+    <main class="flex-1 overflow-y-auto p-8 bg-slate-950">
         
         <section id="tab-analiz" class="tab-content active">
             <h1 class="text-3xl font-bold mb-8 italic">Mercedes İşlem Merkezi</h1>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="glass p-10 rounded-3xl border-2 border-dashed border-blue-500/20 text-center">
                     <i class="fas fa-upload text-5xl text-blue-500 mb-4"></i>
-                    <h2 class="text-xl font-bold mb-4">PDF Yükle</h2>
+                    <h2 class="text-xl font-bold mb-4 text-white">PDF Yükle</h2>
                     <input type="file" id="pdfInput" class="hidden" accept=".pdf">
-                    <button onclick="document.getElementById('pdfInput').click()" class="bg-blue-600 hover:bg-blue-700 px-10 py-3 rounded-full font-bold transition">Dosya Seç</button>
+                    <button onclick="document.getElementById('pdfInput').click()" class="bg-blue-600 hover:bg-blue-700 px-10 py-3 rounded-full font-bold transition shadow-lg shadow-blue-900/40">Dosya Seç</button>
                 </div>
                 <div class="glass p-10 rounded-3xl border-2 border-dashed border-purple-500/20 text-center">
                     <i class="fas fa-stamp text-5xl text-purple-500 mb-4"></i>
-                    <h2 class="text-xl font-bold mb-4">Hızlı İşlem</h2>
-                    <button onclick="applyWatermark()" class="bg-purple-600 hover:bg-purple-700 px-10 py-3 rounded-full font-bold transition">Filigran Bas & İndir</button>
+                    <h2 class="text-xl font-bold mb-4 text-white">Hızlı Filigran</h2>
+                    <button onclick="applyWatermark()" class="bg-purple-600 hover:bg-purple-700 px-10 py-3 rounded-full font-bold transition shadow-lg shadow-purple-900/40">Bas & İndir</button>
                 </div>
             </div>
-            <div id="status" class="mt-6 hidden glass p-4 rounded-xl text-center text-blue-400"></div>
+            <div id="status" class="mt-6 hidden glass p-4 rounded-xl text-center text-blue-400 font-bold"></div>
         </section>
 
         <section id="tab-sohbet" class="tab-content">
             <h1 class="text-3xl font-bold mb-6 italic text-blue-400">Deep Agent Sohbet</h1>
-            <div class="glass h-[500px] rounded-3xl flex flex-col">
-                <div id="chatBox" class="flex-1 p-6 overflow-y-auto space-y-4">
-                    <div class="chat-bubble p-4 rounded-2xl max-w-[80%]">Baboş hoş geldin! Dökümanı yüklediysen merak ettiğin her şeyi sorabilirsin.</div>
+            <div class="glass h-[60vh] rounded-3xl flex flex-col border border-white/5">
+                <div id="chatBox" class="flex-1 p-6 overflow-y-auto space-y-4 text-gray-300 italic">
+                    <div class="bg-blue-600/10 p-4 rounded-2xl border border-blue-500/20 max-w-[80%]">Baboş hazır! Dökümanı yüklediysen analiz için buradayım.</div>
                 </div>
-                <div class="p-4 border-t border-white/10 flex gap-4">
-                    <input type="text" id="userInput" placeholder="Dökümana bir soru sor..." class="flex-1 bg-slate-900 border border-white/10 p-4 rounded-2xl focus:outline-none focus:border-blue-500 text-white">
-                    <button onclick="askAI()" class="bg-blue-600 px-8 rounded-2xl font-bold hover:bg-blue-700 transition">Sor</button>
+                <div class="p-4 border-t border-white/10 flex gap-4 bg-slate-900/50 rounded-b-3xl">
+                    <input type="text" id="userInput" placeholder="Soru yaz..." class="flex-1 bg-slate-900 border border-white/10 p-4 rounded-2xl focus:outline-none focus:border-blue-500 text-white">
+                    <button class="bg-blue-600 px-8 rounded-2xl font-bold hover:bg-blue-700">Sor</button>
                 </div>
             </div>
         </section>
 
         <section id="tab-admin" class="tab-content">
-            <h1 class="text-3xl font-bold mb-6 italic">Sistem Kontrol</h1>
-            <div class="glass p-8 rounded-3xl max-w-xl shadow-2xl">
+            <h1 class="text-3xl font-bold mb-6 italic">Sistem Kontrol Paneli</h1>
+            <div class="glass p-8 rounded-3xl max-w-xl border border-yellow-500/20 shadow-2xl">
                 <h2 class="text-xl font-bold mb-6 flex items-center text-yellow-500">
-                    <i class="fas fa-lock mr-3"></i> AI API Güvenlik Duvarı
+                    <i class="fas fa-lock mr-3"></i> API Güvenlik Anahtarı
                 </h2>
-                <input type="password" id="apiKeyInput" placeholder="Gemini API Key" class="w-full bg-slate-900 p-4 rounded-xl border border-white/10 mb-6 text-white focus:outline-none">
+                <input type="password" id="apiKeyInput" placeholder="Gemini API Key" class="w-full bg-slate-900 p-4 rounded-xl border border-white/10 mb-6 text-white focus:outline-none focus:border-yellow-500">
                 <button onclick="saveKey()" class="w-full bg-green-600 hover:bg-green-700 py-4 rounded-xl font-bold transition">Anahtarı Kaydet & Kilitle</button>
-                <p id="saveStatus" class="mt-4 text-green-400 text-center font-bold hidden">Sistem Güncellendi!</p>
+                <p id="saveStatus" class="mt-4 text-green-400 text-center font-bold hidden">Sistem Hafızası Güncellendi!</p>
             </div>
         </section>
 
     </main>
 
     <script>
+        // Sekme Değiştirme Fonksiyonu (DÜZELTİLDİ)
         function showTab(id) {
+            // Tüm içerikleri gizle
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            // Tüm butonları pasif yap
+            document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+            
+            // Seçilen içeriği göster ve butonu aktif yap
             document.getElementById('tab-' + id).classList.add('active');
+            document.getElementById('btn-' + id).classList.add('active');
         }
 
+        // API Key Kaydetme
         function saveKey() {
             const key = document.getElementById('apiKeyInput').value;
             localStorage.setItem('gemini_api_key', key);
@@ -97,21 +106,20 @@
             setTimeout(() => status.classList.add('hidden'), 3000);
         }
 
+        // Filigran Uygulama
         async function applyWatermark() {
             const fileInput = document.getElementById('pdfInput');
-            if (fileInput.files.length === 0) return alert("Önce bir PDF seç baboş!");
+            if (fileInput.files.length === 0) return alert("Önce bir PDF seç!");
             const status = document.getElementById('status');
-            status.innerText = "Mercedes hızlanıyor, filigran basılıyor...";
+            status.innerText = "İşleniyor...";
             status.classList.remove('hidden');
             try {
                 const arrayBuffer = await fileInput.files[0].arrayBuffer();
                 const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
                 const pages = pdfDoc.getPages();
                 pages.forEach(page => {
-                    const { width, height } = page.getSize();
                     page.drawText('2e-documan Deep Agent', {
-                        x: width / 4, y: height / 2, size: 45,
-                        opacity: 0.15, rotate: PDFLib.degrees(45),
+                        x: 50, y: 50, size: 30, opacity: 0.2,
                         color: PDFLib.rgb(0.5, 0.5, 0.5),
                     });
                 });
@@ -119,9 +127,9 @@
                 const blob = new Blob([pdfBytes], { type: 'application/pdf' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = "2e_analiz_sonuc.pdf";
+                link.download = "2e_filigran.pdf";
                 link.click();
-                status.innerText = "Bitti! Dosya hazır.";
+                status.innerText = "Dosya İndirildi!";
             } catch (e) { alert("Hata: " + e.message); }
         }
 
