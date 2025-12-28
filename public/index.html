@@ -2,84 +2,77 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>2e-documan | Deep Agent Elite</title>
+    <title>2e-documan | Deep Agent Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #0f172a; color: #f8fafc; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-item:hover { background: rgba(59, 130, 246, 0.2); border-left: 4px solid #3b82f6; }
+    </style>
 </head>
-<body class="bg-slate-100 text-slate-900 overflow-hidden">
-    <div class="flex h-screen">
-        <aside class="w-72 bg-slate-900 text-white p-8 shadow-2xl flex flex-col">
-            <h1 class="text-3xl font-black italic text-blue-500 mb-10 tracking-tighter">2e-documan</h1>
-            <nav class="space-y-4 flex-1">
-                <button onclick="showTab('ai-engine')" class="w-full text-left p-4 rounded-xl bg-blue-600 font-bold transition">🚀 AI Analiz Motoru</button>
-                <button onclick="fetchMEBNews()" class="w-full text-left p-4 rounded-xl hover:bg-slate-800 transition">📰 MEB Haber Botu</button>
-                <button onclick="showTab('settings')" class="w-full text-left p-4 rounded-xl hover:bg-slate-800 transition">⚙️ Sistem Ayarları</button>
-            </nav>
-            <div class="text-xs text-slate-500 border-t border-slate-800 pt-4">Status: Deep Agent Active v3</div>
-        </aside>
+<body class="flex h-screen overflow-hidden">
 
-        <main class="flex-1 p-12 overflow-y-auto">
-            <div id="ai-engine" class="tab-content">
-                <div class="flex justify-between items-end mb-8">
-                    <h2 class="text-4xl font-bold">Deep Agent Motoru</h2>
-                    <p class="text-slate-500">PDF yükle, zekayı gör.</p>
-                </div>
-                <div class="bg-white p-16 rounded-[40px] shadow-2xl border-4 border-dashed border-blue-100 text-center">
-                    <input type="file" id="pdf-input" accept=".pdf" class="hidden" onchange="runMercedes()">
-                    <label for="pdf-input" class="cursor-pointer bg-slate-900 text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-blue-600 transition-all inline-block shadow-lg">DÖKÜMANI ATEŞLE</label>
-                </div>
-                <div id="ai-output" class="mt-10 bg-white rounded-3xl p-10 shadow-xl hidden animate-pulse">Analiz bekleniyor...</div>
+    <aside class="w-64 glass flex flex-col">
+        <div class="p-6 text-2xl font-bold text-blue-500 italic italic">2e-documan</div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="#" class="sidebar-item flex items-center p-3 rounded transition" onclick="showTab('analiz')">
+                <i class="fas fa-microchip mr-3"></i> AI Analiz Motoru
+            </a>
+            <a href="#" class="sidebar-item flex items-center p-3 rounded transition" onclick="showTab('admin')">
+                <i class="fas fa-user-shield mr-3"></i> Yönetim Paneli
+            </a>
+            <a href="#" class="sidebar-item flex items-center p-3 rounded transition" onclick="showTab('logs')">
+                <i class="fas fa-history mr-3"></i> İşlem Geçmişi
+            </a>
+        </nav>
+        <div class="p-4 glass text-xs text-gray-400">Deep Agent Active v4.0</div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto p-8">
+        
+        <section id="tab-analiz" class="tab-content">
+            <h1 class="text-3xl font-bold mb-6">Döküman Analiz Merkezi</h1>
+            <div class="glass p-8 rounded-2xl border-dashed border-2 border-blue-500/30 text-center">
+                <i class="fas fa-cloud-upload-alt text-5xl text-blue-500 mb-4"></i>
+                <p class="text-xl mb-4 text-gray-300">PDF dosyasını buraya sürükle veya seç</p>
+                <input type="file" id="pdfInput" class="hidden" accept=".pdf">
+                <button onclick="document.getElementById('pdfInput').click()" class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full font-bold transition">Dökümanı Ateşle</button>
             </div>
+            <div id="result" class="mt-8 glass p-6 rounded-xl hidden"></div>
+        </section>
 
-            <div id="news-bot" class="tab-content hidden">
-                <h2 class="text-4xl font-bold mb-8">MEB Haber Radarı</h2>
-                <div id="news-list" class="grid gap-6">
-                    <p class="italic text-slate-500">Haberler taranıyor...</p>
+        <section id="tab-admin" class="tab-content hidden">
+            <h1 class="text-3xl font-bold mb-6">Sistem Kontrol Merkezi</h1>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="glass p-6 rounded-xl">
+                    <p class="text-gray-400">Toplam Analiz</p>
+                    <h3 class="text-2xl font-bold">1,248</h3>
+                </div>
+                <div class="glass p-6 rounded-xl border-l-4 border-green-500">
+                    <p class="text-gray-400">Aktif Kullanıcı</p>
+                    <h3 class="text-2xl font-bold">14</h3>
+                </div>
+                <div class="glass p-6 rounded-xl border-l-4 border-blue-500">
+                    <p class="text-gray-400">Haber Botu Durumu</p>
+                    <h3 class="text-2xl font-bold text-green-400">Aktif</h3>
                 </div>
             </div>
-        </main>
-    </div>
+            <div class="glass p-6 rounded-xl">
+                <h2 class="text-xl font-bold mb-4">API Güvenlik Ayarları</h2>
+                <input type="password" id="apiKey" placeholder="Gemini API Key" class="w-full bg-slate-800 p-3 rounded border border-gray-700 mb-4">
+                <button class="bg-green-600 px-6 py-2 rounded font-bold">Ayarları Kaydet</button>
+            </div>
+        </section>
 
-    <script type="module">
-        import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
-        const API_KEY = "AIzaSyD8_Xd2wmTN8RmVuTLbzPkJaWq0okbQBuU"; // <-- Burayı güncelle baboş
-        const genAI = new GoogleGenerativeAI(API_KEY);
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    </main>
 
-        window.showTab = (id) => {
+    <script>
+        function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-        };
-
-        window.runMercedes = async () => {
-            const file = document.getElementById('pdf-input').files[0];
-            const output = document.getElementById('ai-output');
-            output.classList.remove('hidden', 'animate-pulse');
-            output.innerHTML = "<span class='text-blue-600 font-bold'>Deep Agent PDF'i parçalıyor...</span>";
-            
-            const reader = new FileReader();
-            reader.onload = async function() {
-                const pdf = await pdfjsLib.getDocument(new Uint8Array(this.result)).promise;
-                let text = "";
-                for(let i=1; i<=Math.min(pdf.numPages, 2); i++){
-                    const page = await pdf.getPage(i);
-                    const content = await page.getTextContent();
-                    text += content.items.map(s => s.str).join(" ");
-                }
-                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-                const result = await model.generateContent("Öğretmenler için bu PDF'i analiz et ve profesyonel bir bülten başlığı çıkar: " + text);
-                output.innerHTML = `<h3 class='text-2xl font-bold mb-4 border-b pb-2 text-blue-600'>AI ANALİZ RAPORU</h3><div class='leading-relaxed text-lg'>${result.response.text().replace(/\n/g, '<br>')}</div>`;
-            };
-            reader.readAsArrayBuffer(file);
-        };
-
-        window.fetchMEBNews = async () => {
-            showTab('news-bot');
-            const list = document.getElementById('news-list');
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-            const result = await model.generateContent("MEB gündemindeki en yeni 3 eğitim haberini başlıklar halinde uydurmadan listele.");
-            list.innerHTML = `<div class='bg-blue-50 p-8 rounded-2xl border border-blue-200'>${result.response.text().replace(/\n/g, '<br>')}</div>`;
-        };
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+        }
+        // Analiz fonksiyonları buraya gelecek
     </script>
 </body>
 </html>
